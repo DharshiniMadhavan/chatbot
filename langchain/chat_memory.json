@@ -1,0 +1,22 @@
+{
+    "2": [
+        {
+            "question": "How many casual leave?",
+            "answer": "Casual leave of up to 6 days can be availed in a calendar year."
+        },
+        {
+            "question": "how many sick leave per year?",
+            "answer": "Sick leave is capped at 12 days per year and must be supported by a medical certificate."
+        }
+    ],
+    "4": [
+        {
+            "question": "EmbedContentRequest.content?",
+            "answer": "I could not find that in the HR policy document."
+        },
+        {
+            "question": "What document is required to approve sick leave?",
+            "answer": "Sick leave is capped at 12 days per year and must be supported by a medical certificate."
+        }
+    ]
+}
