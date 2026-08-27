@@ -215,7 +215,7 @@ def upload_pdf_to_pinecone_once():
     print("Upload completed.")
 
 
-def is_backend_port_in_use(host: str = "127.0.0.1", port: int = 8000) -> bool:
+def is_backend_port_in_use(host: str = "127.0.0.1", port: int = 8002) -> bool:
     import socket
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -226,8 +226,8 @@ def is_backend_port_in_use(host: str = "127.0.0.1", port: int = 8000) -> bool:
 def main():
     import uvicorn
 
-    host = "127.0.0.1"
-    port = 8000
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8002"))
 
     if is_backend_port_in_use(host, port):
         print(f"Backend is already running at http://{host}:{port}")
