@@ -21,3 +21,11 @@ build/
 
 # OS
 .DS_Store
+
+
+
+
+git status
+
+git add .
+git commit -m "Updated backend for Render deployment"
