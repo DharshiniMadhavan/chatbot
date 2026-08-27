@@ -31,6 +31,8 @@ POSTGRES_CONNECTION = os.getenv(
     "DATABASE_URL",
     "postgresql+psycopg2://postgres:Gain%4012345@localhost:5432/langchain_chat",
 )
+if POSTGRES_CONNECTION.startswith("postgres://"):
+    POSTGRES_CONNECTION = POSTGRES_CONNECTION.replace("postgres://", "postgresql://", 1)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
