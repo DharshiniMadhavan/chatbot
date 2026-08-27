@@ -5,7 +5,13 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from rag_langchain import build_chain, get_embeddings, get_session_history, get_vector_store
+from rag_langchain import (
+    build_chain,
+    get_embeddings,
+    get_session_history,
+    get_vector_store,
+    validate_required_settings,
+)
 
 app = FastAPI()
 
@@ -48,9 +54,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-embeddings = get_embeddings()
-vector_store = get_vector_store(embeddings)
-chain = build_chain(vector_store)
+chain = None
+
+
+def get_chain():
+    global chain
+    if chain is None:
+        validate_required_settings()
+        embeddings = get_embeddings()
+        vector_store = get_vector_store(embeddings)
+        chain = build_chain(vector_store)
+    return chain
 
 
 def get_messages(store):
@@ -98,7 +112,7 @@ async def chat(req: ChatRequest):
         history_store = get_session_history(session_id)
         before_count = len(get_messages(history_store))
 
-        answer = chain.invoke(
+        answer = get_chain().invoke(
             {"question": req.question},
             config={"configurable": {"session_id": session_id}},
         )

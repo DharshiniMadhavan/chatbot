@@ -37,13 +37,22 @@ if POSTGRES_CONNECTION.startswith("postgres://"):
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
-if not GOOGLE_API_KEY:
-    raise ValueError("GOOGLE_API_KEY missing")
+def validate_required_settings():
+    missing = [
+        name
+        for name, value in (
+            ("GOOGLE_API_KEY", GOOGLE_API_KEY),
+            ("PINECONE_API_KEY", PINECONE_API_KEY),
+            ("DATABASE_URL", os.getenv("DATABASE_URL")),
+        )
+        if not value
+    ]
+    if missing:
+        raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
 
-if not PINECONE_API_KEY:
-    raise ValueError("PINECONE_API_KEY missing")
 
-os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+if GOOGLE_API_KEY:
+    os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
 
 def remove_dead_local_proxy_settings():
@@ -91,7 +100,7 @@ if not PINECONE_SSL_VERIFY:
 
 engine = create_engine(POSTGRES_CONNECTION)
 pinecone_client = Pinecone(
-    api_key=PINECONE_API_KEY,
+    api_key=PINECONE_API_KEY or "",
     ssl_ca_certs=PINECONE_SSL_CA_CERTS,
     ssl_verify=PINECONE_SSL_VERIFY,
 )
