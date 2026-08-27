@@ -27,7 +27,10 @@ PDF_PATH = str(BASE_DIR / "HRPolicy.pdf")
 INDEX_NAME = os.getenv("INDEX_NAME", "raglangchain").strip()
 EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001").strip()
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gemini-3.5-flash").strip()
-POSTGRES_CONNECTION = "postgresql+psycopg2://postgres:Gain%4012345@localhost:5432/langchain_chat"
+POSTGRES_CONNECTION = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:Gain%4012345@localhost:5432/langchain_chat",
+)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
