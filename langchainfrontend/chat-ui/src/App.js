@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
 // api base url
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8000";
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8002";
 const STORAGE_SESSIONS_KEY = "chatbot_session_ids";
 const STORAGE_SELECTED_KEY = "chatbot_selected_session";
 
