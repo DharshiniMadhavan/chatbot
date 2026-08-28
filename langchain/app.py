@@ -48,7 +48,7 @@ def get_allowed_origins():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_allowed_origins(),
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
+    allow_origin_regex=r"https://.*\.onrender\.com|http://(localhost|127\.0\.0\.1):\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,6 +65,16 @@ def get_chain():
         vector_store = get_vector_store(embeddings)
         chain = build_chain(vector_store)
     return chain
+
+
+@app.get("/")
+async def root():
+    return {"status": "Backend running"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 
 def get_messages(store):
