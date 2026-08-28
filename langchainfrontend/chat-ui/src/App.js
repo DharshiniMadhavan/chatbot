@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
-// api base url
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8002";
+const API_BASE =
+  process.env.REACT_APP_API_BASE ||
+  (window.location.hostname === "localhost" ? "http://localhost:8002" : "");
 const STORAGE_SESSIONS_KEY = "chatbot_session_ids";
 const STORAGE_SELECTED_KEY = "chatbot_selected_session";
 
@@ -67,7 +68,11 @@ export default function App() {
       if (detail) {
         setErrorText(String(detail));
       } else if (err?.code === "ERR_NETWORK") {
-        setErrorText(`Could not reach backend at ${API_BASE}. Start FastAPI and check CORS.`);
+        setErrorText(
+          API_BASE
+            ? `Could not reach backend at ${API_BASE}. Start FastAPI and check CORS.`
+            : "Backend URL is not configured. Set REACT_APP_API_BASE in the frontend service and rebuild."
+        );
       } else {
         setErrorText("Could not load history.");
       }
@@ -89,6 +94,9 @@ export default function App() {
     setQuestion("");
 
     try {
+      if (!API_BASE) {
+        throw new Error("Backend URL is not configured. Set REACT_APP_API_BASE in the frontend service and rebuild.");
+      }
       const res = await axios.post(`${API_BASE}/new-chat`);
       const newId = String(res.data?.session_id || "").trim();
       if (!newId) throw new Error("Invalid session id from backend.");
@@ -114,6 +122,9 @@ export default function App() {
     setLoading(true);
 
     try {
+      if (!API_BASE) {
+        throw new Error("Backend URL is not configured. Set REACT_APP_API_BASE in the frontend service and rebuild.");
+      }
       const res = await axios.post(
         `${API_BASE}/chat`,
         { session_id: selectedSession, question: q },
@@ -127,14 +138,15 @@ export default function App() {
     } catch (err) {
       console.error(err);
       const detail = err?.response?.data?.detail;
+      const fallbackMessage = err?.message || "Error contacting server.";
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: detail ? String(detail) : "Error contacting server.",
+          content: detail ? String(detail) : fallbackMessage,
         },
       ]);
-      setErrorText(detail ? String(detail) : "Message failed. Ensure backend is running.");
+      setErrorText(detail ? String(detail) : fallbackMessage);
     } finally {
       setLoading(false);
     }
