@@ -57,6 +57,9 @@ export default function App() {
     setErrorText("");
     setHistoryLoading(true);
     try {
+      if (!API_BASE) {
+        throw new Error("Backend URL is not configured. Set REACT_APP_API_BASE in the frontend service and rebuild.");
+      }
       const res = await axios.get(`${API_BASE}/history`, {
         params: { session_id: sessionId },
       });
@@ -74,7 +77,7 @@ export default function App() {
             : "Backend URL is not configured. Set REACT_APP_API_BASE in the frontend service and rebuild."
         );
       } else {
-        setErrorText("Could not load history.");
+        setErrorText(err?.message || "Could not load history.");
       }
     } finally {
       setHistoryLoading(false);
