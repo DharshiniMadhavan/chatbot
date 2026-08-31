@@ -29,7 +29,7 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "gemini-embedding-001").strip()
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gemini-3.5-flash").strip()
 POSTGRES_CONNECTION = os.getenv(
     "DATABASE_URL",
-    "postgresql+psycopg2://postgres:Gain%4012345@localhost:5432/langchain_chat",
+    f"sqlite:///{BASE_DIR / 'chat_history.db'}",
 )
 if POSTGRES_CONNECTION.startswith("postgres://"):
     POSTGRES_CONNECTION = POSTGRES_CONNECTION.replace("postgres://", "postgresql://", 1)
